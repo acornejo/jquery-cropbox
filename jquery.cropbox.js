@@ -109,7 +109,10 @@
           }).on('mouseup.' + pluginName, function() {
             $(document).off('.' + pluginName);
           });
-        }).on('mousewheel', function (e) {
+        });
+      }
+      if ($.fn.mousewheel) {
+        this.$image.on('mousewheel', function (e) {
           e.preventDefault();
           if (e.deltaY < 0)
             self.zoomIn.call(self);
