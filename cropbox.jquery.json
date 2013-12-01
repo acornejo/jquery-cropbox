@@ -1,0 +1,37 @@
+{
+  "name": "cropbox",
+  "title": "jquery-cropbox plugin",
+  "description": "jQuery image cropping plugin",
+  "keywords": [
+      "jquery",
+      "crop",
+      "cropping",
+      "drag",
+      "zoom",
+      "pan",
+      "touch"
+  ],
+  "version": "0.1.0",
+  "author": {
+    "name": "Alex Cornejo",
+    "url": "https://github.com/acornejo"
+  },
+  "maintainers": [
+    {
+      "name": "Alex Cornejo",
+      "url": "https://github.com/acornejo"
+    }
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  ],
+  "bugs": "https://github.com/acornejo/jquery-cropbox/issues",
+  "homepage": "https://github.com/acornejo/jquery-cropbox",
+  "docs": "https://github.com/acornejo/jquery-cropbox",
+  "dependencies": {
+      "jquery": ">=1.7"
+  }
+}

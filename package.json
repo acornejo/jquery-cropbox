@@ -1,0 +1,26 @@
+{
+  "name": "jquery-cropbox",
+  "version": "0.1.0",
+  "author": "Alex Cornejo",
+  "devDependencies": {
+    "uglify-js": "~2.4.0",
+    "jshint": "~2.3.0"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/acornejo/jquery-cropbox.git",
+    "web": "https://github.com/acornejo/jquery-cropbox"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  ],
+  "scripts": {
+    "prepublish": "./node_modules/.bin/uglifyjs -o jquery-cropbox.min.js jquery-cropbox.js",
+    "pretest": "./node_modules/.bin/jshint -e 'js' ."
+  },
+  "main": "jquery-cropbox.js"
+}
