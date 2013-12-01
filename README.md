@@ -2,7 +2,6 @@
 
 jQuery plugin for in-place image cropping (zoom & pan, as opposed to select and drag).
 
-This plugin started as a fork of https://github.com/terebentina/jQcrop.
 
 This plugin depends only on jQuery. If either `Hammer.js` or `jquery.hammer.js` is
 loaded, then the cropbox plugin will have touch gesture support built
@@ -10,6 +9,11 @@ in. Similary, if the `jquery.mousewheel.js` plugin is loaded, then the
 cropbox plugin will support zoom in & out using the mousewheel. All
 dependencies on third party libraries (other than jQuery) are strictly
 optional.
+
+Check this plugin in action here http://acornejo.github.io/jquery-cropbox/
+
+*Credits: *
+This plugin started as a fork of https://github.com/terebentina/jQcrop.
 
 ## Usage
 
