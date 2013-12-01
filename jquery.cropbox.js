@@ -61,7 +61,7 @@
         if (typeof $.fn.hammer === 'function')
           hammerit = this.$image.hammer();
         else
-          hammerit = Hammer(this.$image.get(0));
+          hammerit = Hammer(this.$image.get(0), {transform_min_scale: 0.05});
 
         hammerit.on('mousedown', function(e) {
           e.preventDefault(); // this prevents firefox's default image dragging
