@@ -12,7 +12,7 @@ optional.
 
 Check this plugin in action here http://acornejo.github.io/jquery-cropbox/
 
-*Credits: *
+*Credits*
 This plugin started as a fork of https://github.com/terebentina/jQcrop.
 
 ## Usage
