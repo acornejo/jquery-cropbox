@@ -1,8 +1,8 @@
 (function() {
   // helper functions
   function is_touch_device() {
-    return 'ontouchstart' in window // works on most browsers 
-        || 'onmsgesturechange' in window; // works on ie10
+    return 'ontouchstart' in window || // works on most browsers 
+           'onmsgesturechange' in window; // works on ie10
   }
 
   function fill(value, target, container) {
@@ -14,7 +14,7 @@
   function uri2blob(dataURI) {
       var uriComponents = dataURI.split(',');
       var byteString = atob(uriComponents[1]);
-      var mimeString = uriComponents[0].split(':')[1].split(';')[0]
+      var mimeString = uriComponents[0].split(':')[1].split(';')[0];
       var ab = new ArrayBuffer(byteString.length);
       var ia = new Uint8Array(ab);
       for (var i = 0; i < byteString.length; i++)
@@ -175,7 +175,7 @@
         canvas.width = this.options.width;
         canvas.height = this.options.height;
 
-        var ctx = canvas.getContext('2d')
+        var ctx = canvas.getContext('2d');
         ctx.drawImage(this.$image.get(0), this.result.cropX, this.result.cropY, this.result.cropW, this.result.cropH, 0, 0, this.options.width, this.options.height);
 
         return canvas.toDataURL();
