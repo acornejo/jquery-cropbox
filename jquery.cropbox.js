@@ -168,7 +168,7 @@
           stretch: this.minPercent > 1
         };
 
-        this.$image.trigger(pluginName, this.result);
+        this.$image.trigger(pluginName, [this.result, this]);
       },
       getDataURI: function () {
         var canvas = document.createElement('canvas');
@@ -180,7 +180,7 @@
 
         return canvas.toDataURL();
       },
-      getAsBlob: function () {
+      getBlob: function () {
         return uri2blob(this.getDataURI());
       },
     };
@@ -189,7 +189,7 @@
       return this.each(function() {
         var inst = $.data(this, pluginName);
         if (!inst) {
-          var opts = $.extend($.fn[pluginName].defaultOptions, options);
+          var opts = $.extend({}, $.fn[pluginName].defaultOptions, options);
           $.data(this, pluginName, new Crop($(this), opts));
         } else if (options) {
           $.extend(inst.options, options);
