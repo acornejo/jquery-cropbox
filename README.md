@@ -2,15 +2,19 @@
 
 jQuery plugin for in-place image cropping (zoom & pan, as opposed to select and drag).
 
-
 This plugin depends only on jQuery. If either `Hammer.js` or `jquery.hammer.js` is
-loaded, then the cropbox plugin will have touch gesture support built
-in. Similary, if the `jquery.mousewheel.js` plugin is loaded, then the
+loaded, the cropbox plugin will support gestures for panning and zooming
+the cropbox. Similary, if the `jquery.mousewheel.js` plugin is loaded, then the
 cropbox plugin will support zoom in & out using the mousewheel. All
 dependencies on third party libraries (other than jQuery) are strictly
-optional.
+optional. Support for CommonJS and AMD loading is built in.
 
-Check this plugin in action here http://acornejo.github.io/jquery-cropbox/
+In browsers that support the HTML5 FIle API and Canvas API, the cropbox
+plugin provides mehtods to crop the image on the client and obtain the
+resulting cropped image as a Data URL or a binary blob to upload it to
+the server.
+
+Check out the plugin in action here http://acornejo.github.io/jquery-cropbox/
 
 **Credits:**
 This plugin started as a fork of https://github.com/terebentina/jQcrop.
@@ -71,15 +75,15 @@ To get the crop results, bind a function on the `cropbox` event or read the obje
 
 ```javascript
     $('yourimage').cropbox({width: 250, height: 250})
-    .on('cropbox', function (e, results) {
-        console.log(results);
+    .on('cropbox', function (e, result) {
+        console.log(result);
     });
 ```
 
 A reference to the cropbox object can be accessed like so:
 ```javascript
 	var crop = $('yourimage').data('cropbox');
-	console.log(crop.results);
+	console.log(crop.result);
 ```
 
 You then have access to all the properties and methods used for that specific element.

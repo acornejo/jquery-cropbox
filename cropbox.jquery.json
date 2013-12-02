@@ -1,7 +1,6 @@
 {
   "name": "cropbox",
   "title": "jquery-cropbox plugin",
-  "description": "jQuery image cropping plugin",
   "keywords": [
       "jquery",
       "crop",
@@ -11,7 +10,7 @@
       "pan",
       "touch"
   ],
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Alex Cornejo",
     "url": "https://github.com/acornejo"
@@ -33,5 +32,6 @@
   "docs": "https://github.com/acornejo/jquery-cropbox",
   "dependencies": {
       "jquery": ">=1.7"
-  }
+  },
+  "description": "jQuery plugin for in-place image cropping (zoom & pan, as opposed to select and drag).\n \n This plugin depends only on jQuery. If either `Hammer.js` or `jquery.hammer.js` is\n loaded, the cropbox plugin will support gestures for panning and zooming\n the cropbox. Similary, if the `jquery.mousewheel.js` plugin is loaded, then the\n cropbox plugin will support zoom in & out using the mousewheel. All\n dependencies on third party libraries (other than jQuery) are strictly\n optional. Support for CommonJS and AMD loading is built in.\n \n In browsers that support the HTML5 FIle API and Canvas API, the cropbox\n plugin provides mehtods to crop the image on the client and obtain the\n resulting cropped image as a Data URL or a binary blob to upload it to\n the server.\n \n Check out the plugin in action here http://acornejo.github.io/jquery-cropbox/"
 }
