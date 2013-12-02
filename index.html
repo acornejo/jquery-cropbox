@@ -22,30 +22,51 @@
   <script type="text/javascript" defer>
     $( function () {
       $( '.cropimage' ).each( function () {
-        var image = $(this)
-          , results = image.next( '.results' )
-          , x       = $( '.cropX', results )
-          , y       = $( '.cropY', results )
-          , w       = $( '.cropW', results )
-          , h       = $( '.cropH', results );
+        var image = $(this),
+            cropwidth = image.attr('cropwidth'),
+            cropheight = image.attr('cropheight'),
+            results = image.next('.results' ),
+            x       = $('.cropX', results),
+            y       = $('.cropY', results),
+            w       = $('.cropW', results),
+            h       = $('.cropH', results),
+            download = results.next('.download').find('a');
 
-          image.cropbox( {width: 200, height: 200} )
-            .on('cropbox', function( event, results ) {
+          image.cropbox( {width: cropwidth, height: cropheight} )
+            .on('cropbox', function( event, results, img ) {
               x.text( results.cropX );
               y.text( results.cropY );
               w.text( results.cropW );
               h.text( results.cropH );
+              download.attr('href', img.getDataURI());
             });
       } );
     } );
   </script>
 </head>
 <body>
-  <img class="cropimage" alt="" src="img.jpg" />
+
+  <img class="cropimage" alt="" src="img.jpg" cropwidth="200" cropheight="200"/>
   <div class="results">
     <b>X</b>: <span class="cropX"></span>
     <b>Y</b>: <span class="cropY"></span>
     <b>W</b>: <span class="cropW"></span>
     <b>H</b>: <span class="cropH"></span>
+  </div>
+  <div class="download">
+    <a href="#">Download</a>
+  </div>
+
+  <br/>
+
+  <img class="cropimage" alt="" src="img.jpg" cropwidth="300" cropheight="200"/>
+  <div class="results">
+    <b>X</b>: <span class="cropX"></span>
+    <b>Y</b>: <span class="cropY"></span>
+    <b>W</b>: <span class="cropW"></span>
+    <b>H</b>: <span class="cropH"></span>
+  </div>
+  <div class="download">
+    <a href="#">Download</a>
   </div>
 </body>

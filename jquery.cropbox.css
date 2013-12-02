@@ -1,6 +1,7 @@
 .cropFrame {
 	overflow : hidden;
 	position : relative;
+    display: inline-block;
 }
 
 .cropImage {
