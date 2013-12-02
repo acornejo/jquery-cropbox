@@ -75,8 +75,8 @@
           }).on("dragleft dragright dragup dragdown", function(e) {
             if (!dragData)
               dragData = {
-                imgX: parseInt(self.$image.css('left'), 10),
-                imgY: parseInt(self.$image.css('top'), 10)
+                startX: parseInt(self.$image.css('left'), 10),
+                startY: parseInt(self.$image.css('top'), 10)
               };
             dragData.dx = e.gesture.deltaX;
             dragData.dy = e.gesture.deltaY;
@@ -100,8 +100,8 @@
         } else {
           this.$image.on('mousedown.' + pluginName, function(e1) {
             var dragData = {
-              imgX: parseInt(self.$image.css('left'), 10),
-              imgY: parseInt(self.$image.css('top'), 10)
+              startX: parseInt(self.$image.css('left'), 10),
+              startY: parseInt(self.$image.css('top'), 10)
             };
             e1.preventDefault(); 
             $(document).on('mousemove.' + pluginName, function (e2) {
@@ -151,8 +151,8 @@
       },
       drag: function(data) {
         this.$image.css({
-          left: fill(data.imgX + data.dx, this.$image.width(), this.options.width),
-          top: fill(data.imgY + data.dy, this.$image.height(), this.options.height)
+          left: fill(data.startX + data.dx, this.$image.width(), this.options.width),
+          top: fill(data.startY + data.dy, this.$image.height(), this.options.height)
         });
       },
       update: function() {

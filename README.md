@@ -16,15 +16,18 @@ the server.
 
 Check out the plugin in action here http://acornejo.github.io/jquery-cropbox/
 
-**Credits:**
-This plugin started as a fork of https://github.com/terebentina/jQcrop.
+**History:**
+This plugin started as a fork of
+[jQcrop](https://github.com/terebentina/jQcrop), and added touch
+support, mousewheel support and client resize support through the canvas
+api.
 
 ## Usage
 
 ```javascript
 	$('yourimage').cropbox({
-		 width: 200
-		,height: 200
+	    width: 200,
+		height: 200
 	}).on('cropbox', function(e, data) {
         console.log('coordinates: ' + data);
 	});
@@ -66,6 +69,52 @@ This plugin started as a fork of https://github.com/terebentina/jQcrop.
 		<td>null</td>
 		<td>no</td>
 		<td>If not null, this is the entire html block that should appear on hover over the image for instructions and/or buttons (could include the zoom in/out buttons for example). If null, the default html block is used which has the text "Click to drag" and the zoom in/out buttons. Use '' (or false) if you don't want anything to appear.</td>
+	</tr>
+</table>
+
+## Methods
+
+<table>
+	<tr>
+		<th>Name</th>
+		<th>Parameters</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td>zoomIn</td>
+		<td>(none)</td>
+		<td>Increase image zoom level by one step</td>
+	</tr>
+	<tr>
+		<td>zoomOut</td>
+		<td>(none)</td>
+		<td>Decrease image zoom level by one step</td>
+	</tr>
+	<tr>
+		<td>zoom</td>
+		<td>percent</td>
+		<td>Set zoom leevl to a value between 0 and 1. Need to call
+        update to reflect the changes.</td>
+	</tr>
+	<tr>
+		<td>drag</td>
+		<td>{startX: integer, startY: integer, dx: integer, dy: integer}</td>
+		<td>Simulate image dragging, starting from (startX,startY) and moving a delta of (dx,dy). Need to call update to reflect the changes.</td>
+	</tr>
+	<tr>
+		<td>update</td>
+		<td>(none)</td>
+		<td>Update the cropped result (must call after zoom and drag).</td>
+	</tr>
+	<tr>
+		<td>getDataURL</td>
+		<td>(none)</td>
+		<td>Generate a URL for the cropped image on the client (requires HTML5 compliant browser).</td>
+	</tr>
+	<tr>
+		<td>getBlob</td>
+		<td>(none)</td>
+		<td>Generate a Blob with the cropped image (requires HTML5 compliant browser).</td>
 	</tr>
 </table>
 
