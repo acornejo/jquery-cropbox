@@ -30,6 +30,7 @@
       this.height = null;
       this.minPercent = null;
       this.options = options;
+      this.image_src = null;
       this.$image = $image;
       this.$image.hide().addClass('cropImage').wrap('<div class="cropFrame" />'); // wrap image in frame;
       this.$frame = this.$image.parent();
@@ -54,13 +55,19 @@
         this.$frame.append(this.options.controls || defaultControls);
 
         this.$image.on('load.' + pluginName, function() {
+          var image_src = self.$image.attr('src');
+          if (self.image_src === image_src)
+            return;
+          self.image_src = image_src;
           self.width = this.width;
           self.height = this.height;
-          self.focal = { x: Math.round(self.width / 2) ,y: Math.round(self.height / 2) };
-          self.computeMinPercent();
-          self.$image.fadeIn('fast'); //display image now that it has loaded
+          self.percent = undefined;
+          self.$image.fadeIn('fast');
+          self.fit();
           self.update();
-        }).prop('draggable', false).attr('src', self.$image.attr('src'));
+        }).prop('draggable', false).each(function () {
+          if (this.complete) $(this).trigger('load');
+        });
 
         if (typeof $.fn.hammer === 'function' || typeof Hammer !== 'undefined') {
           var hammerit, dragData;
@@ -82,7 +89,7 @@
             dragData.dy = e.gesture.deltaY;
             e.gesture.preventDefault();
             e.gesture.stopPropagation();
-            self.drag.call(self, dragData);
+            self.drag.call(self, dragData, true);
           }).on('release', function(e) {
             e.gesture.preventDefault();
             dragData = null;
@@ -92,10 +99,10 @@
             self.zoomIn.call(self);
           }).on('pinchin', function (e) {
             e.gesture.preventDefault();
-            self.zoom.call(self, self.percent - e.gesture.scale / 110);
+            self.zoomIn.call(self);
           }).on('pinchout', function (e) {
             e.gesture.preventDefault();
-            self.zoom.call(self, self.percent + (e.gesture.scale - 1) / 110);
+            self.zoomOut.call(self);
           });
         } else {
           this.$image.on('mousedown.' + pluginName, function(e1) {
@@ -107,8 +114,9 @@
             $(document).on('mousemove.' + pluginName, function (e2) {
               dragData.dx = e2.pageX - e1.pageX;
               dragData.dy = e2.pageY - e1.pageY;
-              self.drag.call(self, dragData);
+              self.drag.call(self, dragData, true);
             }).on('mouseup.' + pluginName, function() {
+              self.update.call(self);
               $(document).off('.' + pluginName);
             });
           });
@@ -124,7 +132,7 @@
         }
       },
 
-      stop: function () {
+      remove: function () {
         var hammerit;
         if (typeof $.fn.hammer === 'function')
           hammerit = this.$image.hammer();
@@ -133,48 +141,49 @@
         if (hammerit)
           hammerit.off('mousedown dragleft dragright dragup dragdown release doubletap pinchin pinchout');
         this.$image.off('.' + pluginName);
-        this.$image.removeClass('cropImage');
         this.$image.css({width: '', left: '', top: ''});
-        this.$image.detach().insertAfter(this.$frame);
-        this.$frame.remove();
+        this.$image.removeClass('cropImage');
+        this.$image.removeData('cropbox');
+        this.$image.insertAfter(this.$frame);
+        this.$frame.removeClass('cropFrame');
+        this.$frame.removeAttr('style');
+        this.$frame.empty();
+        this.$frame.hide();
       },
 
-      computeMinPercent: function () {
+      fit: function () {
         var widthRatio = this.options.width / this.width, heightRatio = this.options.height / this.height;
         if (widthRatio >= heightRatio)
           this.minPercent = this.width < this.options.width ? this.options.width / this.width : widthRatio;
         else
           this.minPercent = this.height < this.options.height ? this.options.height / this.height : heightRatio;
-        this.zoom(this.percent || this.minPercent);
+        this.zoom(this.minPercent);
       },
 
       zoom: function(percent) {
         this.percent = Math.max(this.minPercent, Math.min(1, percent));
         this.$image.width(Math.ceil(this.width * this.percent));
         this.$image.css({
-          left: fill(-Math.round(this.focal.x * this.percent - this.options.width / 2), this.$image.width(), this.options.width),
-          top: fill(-Math.round(this.focal.y * this.percent - this.options.height / 2), this.$image.height(), this.options.height)
+          left: fill(Math.round((this.options.width - this.$image.width())/2), this.$image.width, this.options.width),
+          top: fill(Math.round((this.options.height - this.$image.height())/2), this.$image.height, this.options.height)
         });
+        this.update();
       },
       zoomIn: function() {
         this.zoom(this.percent + (1 - this.minPercent) / (this.options.zoom - 1 || 1));
-        this.update();
       },
       zoomOut: function() {
         this.zoom(this.percent - (1 - this.minPercent) / (this.options.zoom - 1 || 1));
-        this.update();
       },
-      drag: function(data) {
+      drag: function(data, skipupdate) {
         this.$image.css({
           left: fill(data.startX + data.dx, this.$image.width(), this.options.width),
           top: fill(data.startY + data.dy, this.$image.height(), this.options.height)
         });
+        if (skipupdate)
+          this.update();
       },
       update: function() {
-        this.focal = {
-          x: Math.round((this.options.width / 2 - parseInt(this.$image.css('left'), 10)) / this.percent),
-          y: Math.round((this.options.height / 2 - parseInt(this.$image.css ('top'), 10)) / this.percent)
-        };
         this.result = {
           cropX: -Math.floor(parseInt(this.$image.css('left'), 10) / this.percent),
           cropY: -Math.floor(parseInt(this.$image.css('top'), 10) / this.percent),
@@ -208,7 +217,7 @@
           $.data(this, pluginName, new Crop($(this), opts));
         } else if (options) {
           $.extend(inst.options, options);
-          inst.computeMinPercent();
+          inst.fit();
         }
       });
     };

@@ -116,6 +116,11 @@ api.
 		<td>(none)</td>
 		<td>Generate a Blob with the cropped image (requires HTML5 compliant browser).</td>
 	</tr>
+	<tr>
+		<td>remove</td>
+		<td>(none)</td>
+		<td>Remove the cropbox functionality from the image.</td>
+	</tr>
 </table>
 
 ## Event
