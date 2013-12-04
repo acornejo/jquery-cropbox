@@ -53,7 +53,7 @@
         this.$frame.width(self.options.width).height(self.options.height);
         this.$frame.append(this.options.controls || defaultControls);
 
-        this.$image.on('load', function() {
+        this.$image.on('load.' + pluginName, function() {
           self.width = this.width;
           self.height = this.height;
           self.focal = { x: Math.round(self.width / 2) ,y: Math.round(self.height / 2) };
@@ -114,7 +114,7 @@
           });
         }
         if ($.fn.mousewheel) {
-          this.$image.on('mousewheel', function (e) {
+          this.$image.on('mousewheel.' + pluginName, function (e) {
             e.preventDefault();
             if (e.deltaY < 0)
               self.zoomIn.call(self);
@@ -122,6 +122,21 @@
               self.zoomOut.call(self);
           });
         }
+      },
+
+      stop: function () {
+        var hammerit;
+        if (typeof $.fn.hammer === 'function')
+          hammerit = this.$image.hammer();
+        else if (typeof Hammer !== 'undefined')
+          hammerit = Hammer(this.$image.get(0));
+        if (hammerit)
+          hammerit.off('mousedown dragleft dragright dragup dragdown release doubletap pinchin pinchout');
+        this.$image.off('.' + pluginName);
+        this.$image.removeClass('cropImage');
+        this.$image.css({width: '', left: '', top: ''});
+        this.$image.detach().insertAfter(this.$frame);
+        this.$frame.remove();
       },
 
       computeMinPercent: function () {
