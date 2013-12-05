@@ -29,7 +29,7 @@ api.
 	    width: 200,
 		height: 200
 	}).on('cropbox', function(e, data) {
-        console.log('coordinates: ' + data);
+        console.log('crop window: ' + data);
 	});
 ```
 ## Options

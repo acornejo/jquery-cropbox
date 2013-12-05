@@ -217,7 +217,7 @@
           $.data(this, pluginName, new Crop($(this), opts));
         } else if (options) {
           $.extend(inst.options, options);
-          inst.fit();
+          inst.$image.trigger('load');
         }
       });
     };
