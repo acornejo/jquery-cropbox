@@ -41,11 +41,6 @@
       init: function () {
         var self = this;
 
-        if (is_touch_device())
-          this.$frame.addClass('hover');
-        else
-          this.$frame.hover(function () { self.$frame.toggleClass('hover'); });
-
         var defaultControls = $('<div/>', { 'class' : 'cropControls' })
               .append($('<span>Drag to crop</span>'))
               .append($('<a/>', { 'class' : 'cropZoomIn' }).on('click', $.proxy(this.zoomIn, this)))
@@ -65,6 +60,14 @@
           self.$image.fadeIn('fast');
           self.fit();
           self.update();
+          self.$frame.off('.' + pluginName);
+          self.$frame.removeClass('hover');
+          if (self.options.showControls === 'always')
+            self.$frame.addClass('hover');
+          else if (self.options.showControls === 'auto' && is_touch_device())
+            self.$frame.addClass('hover');
+          else if (self.options.showControls !== 'never')
+            self.$frame.on('hover.' + pluginName, function () { self.$frame.toggleClass('hover'); });
         }).prop('draggable', false).each(function () {
           if (this.complete) $(this).trigger('load');
         });
@@ -140,6 +143,7 @@
           hammerit = Hammer(this.$image.get(0));
         if (hammerit)
           hammerit.off('mousedown dragleft dragright dragup dragdown release doubletap pinchin pinchout');
+        this.$frame.off('.' + pluginName);
         this.$image.off('.' + pluginName);
         this.$image.css({width: '', left: '', top: ''});
         this.$image.removeClass('cropImage');
@@ -226,7 +230,8 @@
       width: 200,
       height: 200,
       zoom: 10,
-      controls: null
+      controls: null,
+      showControls: 'auto'
     };
   }
 
