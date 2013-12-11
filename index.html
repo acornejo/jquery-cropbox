@@ -32,13 +32,13 @@
             h       = $('.cropH', results),
             download = results.next('.download').find('a');
 
-          image.cropbox( {width: cropwidth, height: cropheight} )
+          image.cropbox( {width: cropwidth, height: cropheight, showControls: 'auto'} )
             .on('cropbox', function( event, results, img ) {
               x.text( results.cropX );
               y.text( results.cropY );
               w.text( results.cropW );
               h.text( results.cropH );
-              download.attr('href', img.getDataURI());
+              download.attr('href', img.getDataURL());
             });
       } );
     } );
