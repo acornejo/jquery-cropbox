@@ -99,10 +99,10 @@
             self.zoomIn.call(self);
           }).on('pinchin', function (e) {
             e.gesture.preventDefault();
-            self.zoomIn.call(self);
+            self.zoomOut.call(self);
           }).on('pinchout', function (e) {
             e.gesture.preventDefault();
-            self.zoomOut.call(self);
+            self.zoomIn.call(self);
           });
         } else {
           this.$image.on('mousedown.' + pluginName, function(e1) {
