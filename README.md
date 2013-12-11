@@ -70,6 +70,13 @@ api.
 		<td>no</td>
 		<td>If not null, this is the entire html block that should appear on hover over the image for instructions and/or buttons (could include the zoom in/out buttons for example). If null, the default html block is used which has the text "Click to drag" and the zoom in/out buttons. Use '' (or false) if you don't want anything to appear.</td>
 	</tr>
+	<tr>
+		<td>showControls</td>
+		<td>never, always, hover, auto</td>
+		<td>auto</td>
+		<td>no</td>
+		<td>This flag is used to determine when to display the controls. Never, always and hover do exactly what you would expect (never show them, always show them, show them on hover). The auto flag is the same as the hover flag, except that on mobile devices it always shows the controls (since there is no hover event).</td>
+	</tr>
 </table>
 
 ## Methods

@@ -62,12 +62,12 @@
           self.update();
           self.$frame.off('.' + pluginName);
           self.$frame.removeClass('hover');
-          if (self.options.showControls === 'always')
+          if (self.options.showControls === 'always' || self.options.showControls === 'auto' && is_touch_device())
             self.$frame.addClass('hover');
-          else if (self.options.showControls === 'auto' && is_touch_device())
-            self.$frame.addClass('hover');
-          else if (self.options.showControls !== 'never')
-            self.$frame.on('hover.' + pluginName, function () { self.$frame.toggleClass('hover'); });
+          else if (self.options.showControls !== 'never') {
+            self.$frame.on('mouseenter.' + pluginName, function () { self.$frame.addClass('hover'); });
+            self.$frame.on('mouseleave.' + pluginName, function () { self.$frame.removeClass('hover'); });
+          }
         }).prop('draggable', false).each(function () {
           if (this.complete) $(this).trigger('load');
         });
@@ -168,8 +168,8 @@
         this.percent = Math.max(this.minPercent, Math.min(1, percent));
         this.$image.width(Math.ceil(this.width * this.percent));
         this.$image.css({
-          left: fill(Math.round((this.options.width - this.$image.width())/2), this.$image.width, this.options.width),
-          top: fill(Math.round((this.options.height - this.$image.height())/2), this.$image.height, this.options.height)
+          left: fill(Math.round((this.options.width - this.$image.width())/2), this.$image.width(), this.options.width),
+          top: fill(Math.round((this.options.height - this.$image.height())/2), this.$image.height(), this.options.height)
         });
         this.update();
       },

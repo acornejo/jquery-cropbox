@@ -34,8 +34,7 @@
     user-select: none;
 }
 
-.hover .cropControls,
-.cropFrame:hover .cropControls {
+.cropFrame.hover .cropControls {
 	opacity    : .55;
 	filter     : alpha(opacity=55);
 }
