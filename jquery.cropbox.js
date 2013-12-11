@@ -53,6 +53,7 @@
           var image_src = self.$image.attr('src');
           if (self.image_src === image_src)
             return;
+          self.$image.css({width: '', left: '', top: ''});
           self.image_src = image_src;
           self.width = this.width;
           self.height = this.height;
@@ -165,12 +166,25 @@
       },
 
       zoom: function(percent) {
+        var old_left = parseInt(this.$image.css('left'), 10);
+        var old_top = parseInt(this.$image.css('top'), 10);
+        var old_percent = this.percent;
+
         this.percent = Math.max(this.minPercent, Math.min(1, percent));
         this.$image.width(Math.ceil(this.width * this.percent));
-        this.$image.css({
-          left: fill(Math.round((this.options.width - this.$image.width())/2), this.$image.width(), this.options.width),
-          top: fill(Math.round((this.options.height - this.$image.height())/2), this.$image.height(), this.options.height)
-        });
+
+        if (old_percent) {
+          var zoomFactor = this.percent / old_percent;
+          this.$image.css({
+            left: fill((1-zoomFactor)*this.options.width/2 + zoomFactor*old_left, this.$image.width(), this.options.width),
+            top: fill((1-zoomFactor)*this.options.height/2 + zoomFactor*old_top, this.$image.height(), this.options.height)
+          });
+        } else {
+          this.$image.css({
+            left: fill((this.options.width-this.$image.width())/2, this.$image.width(), this.options.width),
+            right: fill((this.options.height-this.$image.height())/2, this.$image.height(), this.options.height)
+          });
+        }
         this.update();
       },
       zoomIn: function() {
