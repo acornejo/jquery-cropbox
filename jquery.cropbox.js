@@ -194,7 +194,7 @@
 
         this.$image.trigger(pluginName, [this.result, this]);
       },
-      getDataURI: function () {
+      getDataURL: function () {
         var canvas = document.createElement('canvas');
         canvas.width = this.options.width;
         canvas.height = this.options.height;
@@ -205,7 +205,7 @@
         return canvas.toDataURL();
       },
       getBlob: function () {
-        return uri2blob(this.getDataURI());
+        return uri2blob(this.getDataURL());
       },
     };
 
