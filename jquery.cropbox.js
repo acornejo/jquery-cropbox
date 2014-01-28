@@ -53,6 +53,7 @@
           var image_src = self.$image.attr('src');
           if (self.image_src === image_src)
             return;
+          self.$frame.width(self.options.width).height(self.options.height);
           self.$image.css({width: '', left: '', top: ''});
           self.image_src = image_src;
           self.width = this.width;
@@ -235,6 +236,7 @@
           $.data(this, pluginName, new Crop($(this), opts));
         } else if (options) {
           $.extend(inst.options, options);
+          inst.image_src = null;
           inst.$image.trigger('load');
         }
       });

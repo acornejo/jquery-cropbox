@@ -41,6 +41,14 @@
               download.attr('href', img.getDataURL());
             });
       } );
+
+      $('#select').on('change', function () {
+          var size = parseInt(this.value);
+          $('.cropimage').each(function () {
+            $(this).cropbox({width: size, height: size})
+          });
+      });
+
     } );
   </script>
 </head>
@@ -66,7 +74,17 @@
     <b>W</b>: <span class="cropW"></span>
     <b>H</b>: <span class="cropH"></span>
   </div>
+
   <div class="download">
     <a href="#" download="crop.png">Download</a>
   </div>
+
+  <br/>
+
+  <h4>Change size of every cropbox</h4>
+
+  <select id="select">
+    <option value="200" selected>200</option>
+    <option value="300">300</option>
+  </select>
 </body>
