@@ -1,7 +1,7 @@
 {
   "name": "cropbox",
   "main": "jquery.cropbox.js",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "homepage": "https://github.com/acornejo/jquery-cropbox",
   "authors": [
     "Alex Cornejo <acornejo@gmail.com>"
