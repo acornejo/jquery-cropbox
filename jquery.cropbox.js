@@ -53,6 +53,7 @@
           var image_src = self.$image.attr('src');
           if (self.image_src === image_src)
             return;
+          self.$frame.width(self.options.width).height(self.options.height);
           self.$image.css({width: '', left: '', top: ''});
           self.image_src = image_src;
           self.width = this.width;
@@ -232,9 +233,11 @@
         var inst = $.data(this, pluginName);
         if (!inst) {
           var opts = $.extend({}, $.fn[pluginName].defaultOptions, options);
-          $.data(this, pluginName, new Crop($(this), opts));
+          inst = new Crop($(this), opts);
+          $.data(this, pluginName, inst);
         } else if (options) {
           $.extend(inst.options, options);
+          inst.image_src = null;
           inst.$image.trigger('load');
         }
       });
