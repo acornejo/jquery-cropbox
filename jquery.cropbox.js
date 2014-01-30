@@ -54,7 +54,7 @@
           if (self.image_src === image_src)
             return;
           self.$frame.width(self.options.width).height(self.options.height);
-          self.$image.css({width: '', left: '', top: ''});
+          self.$image.css({width: '', left: 0, top: 0});
           self.image_src = image_src;
           self.width = this.width;
           self.height = this.height;
