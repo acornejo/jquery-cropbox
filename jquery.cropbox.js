@@ -1,12 +1,12 @@
 (function() {
   // helper functions
   function is_touch_device() {
-    return 'ontouchstart' in window || // works on most browsers 
+    return 'ontouchstart' in window || // works on most browsers
            'onmsgesturechange' in window; // works on ie10
   }
 
   function fill(value, target, container) {
-    if (value + target < container) 
+    if (value + target < container)
       value = container - target;
     return value > 0 ? 0 : value;
   }
@@ -22,7 +22,7 @@
       return new Blob([ab], { type: mimeString });
   }
 
-	var pluginName = 'cropbox';
+  var pluginName = 'cropbox';
 
   function factory($) {
     function Crop($image, options) {
@@ -54,7 +54,7 @@
           if (self.image_src === image_src)
             return;
           self.$frame.width(self.options.width).height(self.options.height);
-          self.$image.css({width: '', left: '', top: ''});
+          self.$image.css({width: '', left: 0, top: 0});
           self.image_src = image_src;
           self.width = this.width;
           self.height = this.height;
@@ -115,7 +115,7 @@
               startX: parseInt(self.$image.css('left'), 10),
               startY: parseInt(self.$image.css('top'), 10)
             };
-            e1.preventDefault(); 
+            e1.preventDefault();
             $(document).on('mousemove.' + pluginName, function (e2) {
               dragData.dx = e2.pageX - e1.pageX;
               dragData.dy = e2.pageY - e1.pageY;
@@ -204,10 +204,10 @@
       },
       update: function() {
         this.result = {
-          cropX: -Math.floor(parseInt(this.$image.css('left'), 10) / this.percent),
-          cropY: -Math.floor(parseInt(this.$image.css('top'), 10) / this.percent),
-          cropW: Math.round(this.options.width / this.percent),
-          cropH: Math.round(this.options.height / this.percent),
+          cropX: -Math.ceil(parseInt(this.$image.css('left'), 10) / this.percent),
+          cropY: -Math.ceil(parseInt(this.$image.css('top'), 10) / this.percent),
+          cropW: Math.floor(this.options.width / this.percent),
+          cropH: Math.floor(this.options.height / this.percent),
           stretch: this.minPercent > 1
         };
 
@@ -251,9 +251,9 @@
     };
   }
 
-  if (typeof require === "function" && typeof exports === "object" && typeof module === "object") 
+  if (typeof require === "function" && typeof exports === "object" && typeof module === "object")
       factory(require("jquery"));
-  else if (typeof define === "function" && define.amd) 
+  else if (typeof define === "function" && define.amd)
       define(["jquery"], factory);
   else
       factory(window.jQuery || window.Zepto);
