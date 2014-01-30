@@ -204,8 +204,8 @@
       },
       update: function() {
         this.result = {
-          cropX: -Math.floor(parseInt(this.$image.css('left'), 10) / this.percent),
-          cropY: -Math.floor(parseInt(this.$image.css('top'), 10) / this.percent),
+          cropX: -Math.ceil(parseInt(this.$image.css('left'), 10) / this.percent),
+          cropY: -Math.ceil(parseInt(this.$image.css('top'), 10) / this.percent),
           cropW: Math.round(this.options.width / this.percent),
           cropH: Math.round(this.options.height / this.percent),
           stretch: this.minPercent > 1
