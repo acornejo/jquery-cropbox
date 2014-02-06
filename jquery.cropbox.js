@@ -53,26 +53,29 @@
           var image_src = self.$image.attr('src');
           if (self.image_src === image_src)
             return;
-          $('<img/>').on('load', function () { // create new image to fix IE8+ load event
-            self.$frame.width(self.options.width).height(self.options.height);
-            self.$image.css({width: '', left: 0, top: 0});
-            self.image_src = image_src;
-            self.width = this.width;
-            self.height = this.height;
-            self.percent = undefined;
-            self.$image.fadeIn('fast');
-            self.fit();
-            self.update();
-            self.$frame.off('.' + pluginName);
-            self.$frame.removeClass('hover');
-            if (self.options.showControls === 'always' || self.options.showControls === 'auto' && is_touch_device())
-              self.$frame.addClass('hover');
-            else if (self.options.showControls !== 'never') {
-              self.$frame.on('mouseenter.' + pluginName, function () { self.$frame.addClass('hover'); });
-              self.$frame.on('mouseleave.' + pluginName, function () { self.$frame.removeClass('hover'); });
-            }
-          }).attr('src', image_src);
-        }).prop('draggable', false).trigger('load.' + pluginName);
+          self.$frame.width(self.options.width).height(self.options.height);
+          self.$image.css({width: '', left: 0, top: 0});
+          self.image_src = image_src;
+          self.width = this.width;
+          self.height = this.height;
+          self.percent = undefined;
+          self.$image.fadeIn('fast');
+          self.fit();
+          self.update();
+          self.$frame.off('.' + pluginName);
+          self.$frame.removeClass('hover');
+          if (self.options.showControls === 'always' || self.options.showControls === 'auto' && is_touch_device())
+            self.$frame.addClass('hover');
+          else if (self.options.showControls !== 'never') {
+            self.$frame.on('mouseenter.' + pluginName, function () { self.$frame.addClass('hover'); });
+            self.$frame.on('mouseleave.' + pluginName, function () { self.$frame.removeClass('hover'); });
+          }
+        }).prop('draggable', false);
+
+        // create new image to fix IE8+ load event
+        $('<img/>').on('load', function () {
+          self.$image.trigger('load');
+        }).attr('src', self.$image.attr('src'));
 
         if (typeof $.fn.hammer === 'function' || typeof Hammer !== 'undefined') {
           var hammerit, dragData;
