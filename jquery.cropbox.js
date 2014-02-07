@@ -161,11 +161,9 @@
       },
 
       fit: function () {
-        var widthRatio = this.options.width / this.width, heightRatio = this.options.height / this.height;
-        if (widthRatio >= heightRatio)
-          this.minPercent = this.width < this.options.width ? this.options.width / this.width : widthRatio;
-        else
-          this.minPercent = this.height < this.options.height ? this.options.height / this.height : heightRatio;
+        var widthRatio = this.options.width / this.width, 
+          heightRatio = this.options.height / this.height;
+        this.minPercent = (widthRatio >= heightRatio) ? widthRatio : heightRatio;
         this.zoom(this.minPercent);
       },
 
