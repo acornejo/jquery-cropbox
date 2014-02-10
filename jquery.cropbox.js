@@ -30,9 +30,8 @@
       this.height = null;
       this.minPercent = null;
       this.options = options;
-      this.image_src = null;
       this.$image = $image;
-      this.$image.hide().addClass('cropImage').wrap('<div class="cropFrame" />'); // wrap image in frame;
+      this.$image.hide().prop('draggable', false).addClass('cropImage').wrap('<div class="cropFrame" />'); // wrap image in frame;
       this.$frame = this.$image.parent();
       this.init();
     }
@@ -48,31 +47,8 @@
 
         this.$frame.width(self.options.width).height(self.options.height);
         this.$frame.append(this.options.controls || defaultControls);
-
-        this.$image.on('load.' + pluginName, function() {
-          var image_src = self.$image.attr('src');
-          if (self.image_src === image_src)
-            return;
-          self.$frame.width(self.options.width).height(self.options.height);
-          self.$image.css({width: '', left: 0, top: 0});
-          self.image_src = image_src;
-          self.width = this.width;
-          self.height = this.height;
-          self.percent = undefined;
-          self.$image.fadeIn('fast');
-          self.fit();
-          self.update();
-          self.$frame.off('.' + pluginName);
-          self.$frame.removeClass('hover');
-          if (self.options.showControls === 'always' || self.options.showControls === 'auto' && is_touch_device())
-            self.$frame.addClass('hover');
-          else if (self.options.showControls !== 'never') {
-            self.$frame.on('mouseenter.' + pluginName, function () { self.$frame.addClass('hover'); });
-            self.$frame.on('mouseleave.' + pluginName, function () { self.$frame.removeClass('hover'); });
-          }
-        }).prop('draggable', false).each(function () {
-          if (this.complete) $(this).trigger('load');
-        });
+        this.$image.css({width: '', left: 0, top: 0});
+        this.updateOptions();
 
         if (typeof $.fn.hammer === 'function' || typeof Hammer !== 'undefined') {
           var hammerit, dragData;
@@ -137,6 +113,33 @@
         }
       },
 
+      updateOptions: function () {
+        var self = this;
+        self.$frame.width(self.options.width).height(self.options.height);
+        self.$frame.off('.' + pluginName);
+        self.$frame.removeClass('hover');
+        if (self.options.showControls === 'always' || self.options.showControls === 'auto' && is_touch_device())
+          self.$frame.addClass('hover');
+        else if (self.options.showControls !== 'never') {
+          self.$frame.on('mouseenter.' + pluginName, function () { self.$frame.addClass('hover'); });
+          self.$frame.on('mouseleave.' + pluginName, function () { self.$frame.removeClass('hover'); });
+        }
+
+        // Image hack to get width and height on IE
+        var img = new Image();
+        img.src = self.$image.attr('src');
+        img.onload = function () {
+          self.width = img.width;
+          self.height = img.height;
+          self.percent = undefined;
+          self.$image.fadeIn('fast');
+          self.fit();
+          self.update();
+          img.src = null;
+          img.onload = null;
+        };
+      },
+
       remove: function () {
         var hammerit;
         if (typeof $.fn.hammer === 'function')
@@ -158,32 +161,33 @@
       },
 
       fit: function () {
-        var widthRatio = this.options.width / this.width, heightRatio = this.options.height / this.height;
-        if (widthRatio >= heightRatio)
-          this.minPercent = this.width < this.options.width ? this.options.width / this.width : widthRatio;
-        else
-          this.minPercent = this.height < this.options.height ? this.options.height / this.height : heightRatio;
+        var widthRatio = this.options.width / this.width,
+          heightRatio = this.options.height / this.height;
+        this.minPercent = (widthRatio >= heightRatio) ? widthRatio : heightRatio;
         this.zoom(this.minPercent);
       },
 
       zoom: function(percent) {
-        var old_left = parseInt(this.$image.css('left'), 10);
-        var old_top = parseInt(this.$image.css('top'), 10);
-        var old_percent = this.percent;
+        var old_left = parseInt(this.$image.css('left'), 10),
+          old_top = parseInt(this.$image.css('top'), 10),
+          old_percent = this.percent,
+          img_width, img_height;
 
         this.percent = Math.max(this.minPercent, Math.min(1, percent));
-        this.$image.width(Math.ceil(this.width * this.percent));
+        img_width = Math.ceil(this.width*this.percent);
+        img_height = Math.ceil(this.height*this.percent);
+        this.$image.width(img_width);
 
         if (old_percent) {
           var zoomFactor = this.percent / old_percent;
           this.$image.css({
-            left: fill((1-zoomFactor)*this.options.width/2 + zoomFactor*old_left, this.$image.width(), this.options.width),
-            top: fill((1-zoomFactor)*this.options.height/2 + zoomFactor*old_top, this.$image.height(), this.options.height)
+            left: fill((1-zoomFactor)*this.options.width/2 + zoomFactor*old_left, img_width, this.options.width),
+            top: fill((1-zoomFactor)*this.options.height/2 + zoomFactor*old_top, img_height, this.options.height)
           });
         } else {
           this.$image.css({
-            left: fill((this.options.width-this.$image.width())/2, this.$image.width(), this.options.width),
-            right: fill((this.options.height-this.$image.height())/2, this.$image.height(), this.options.height)
+            left: fill((this.options.width-img_width)/2, img_width, this.options.width),
+            right: fill((this.options.height-img_height)/2, img_height, this.options.height)
           });
         }
         this.update();
@@ -214,11 +218,10 @@
         this.$image.trigger(pluginName, [this.result, this]);
       },
       getDataURL: function () {
-        var canvas = document.createElement('canvas');
+        var canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
+
         canvas.width = this.options.width;
         canvas.height = this.options.height;
-
-        var ctx = canvas.getContext('2d');
         ctx.drawImage(this.$image.get(0), this.result.cropX, this.result.cropY, this.result.cropW, this.result.cropH, 0, 0, this.options.width, this.options.height);
 
         return canvas.toDataURL();
@@ -236,8 +239,7 @@
           $.data(this, pluginName, new Crop($(this), opts));
         } else if (options) {
           $.extend(inst.options, options);
-          inst.image_src = null;
-          inst.$image.trigger('load');
+          inst.updateOptions();
         }
       });
     };
