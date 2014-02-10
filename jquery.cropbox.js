@@ -56,8 +56,10 @@
           self.$frame.width(self.options.width).height(self.options.height);
           self.$image.css({width: '', left: 0, top: 0});
           self.image_src = image_src;
-          self.width = this.width;
-          self.height = this.height;
+          var img = new Image();
+          img.src = image_src;
+          self.width = img.width;
+          self.height = img.height;
           self.percent = undefined;
           self.$image.fadeIn('fast');
           self.fit();
@@ -174,17 +176,19 @@
 
         this.percent = Math.max(this.minPercent, Math.min(1, percent));
         this.$image.width(Math.ceil(this.width * this.percent));
+        var width = this.$image.width();
+        var height = this.$image.height();
 
         if (old_percent) {
           var zoomFactor = this.percent / old_percent;
           this.$image.css({
-            left: fill((1-zoomFactor)*this.options.width/2 + zoomFactor*old_left, this.$image.width(), this.options.width),
-            top: fill((1-zoomFactor)*this.options.height/2 + zoomFactor*old_top, this.$image.height(), this.options.height)
+            left: fill((1-zoomFactor)*this.options.width/2 + zoomFactor*old_left, width, this.options.width),
+            top: fill((1-zoomFactor)*this.options.height/2 + zoomFactor*old_top, height, this.options.height)
           });
         } else {
           this.$image.css({
-            left: fill((this.options.width-this.$image.width())/2, this.$image.width(), this.options.width),
-            right: fill((this.options.height-this.$image.height())/2, this.$image.height(), this.options.height)
+            left: fill((this.options.width-width)/2, width, this.options.width),
+            top: fill((this.options.height-height)/2, height, this.options.height)
           });
         }
         this.update();
