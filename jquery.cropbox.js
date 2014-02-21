@@ -47,9 +47,7 @@
               .append($('<a/>', { 'class' : 'cropZoomIn' }).on('click', $.proxy(this.zoomIn, this)))
               .append($('<a/>', { 'class' : 'cropZoomOut' }).on('click', $.proxy(this.zoomOut, this)));
 
-        this.$frame.width(self.options.width).height(self.options.height);
         this.$frame.append(this.options.controls || defaultControls);
-        this.$image.css({width: '', left: 0, top: 0});
         this.updateOptions();
 
         if (typeof $.fn.hammer === 'function' || typeof Hammer !== 'undefined') {
@@ -117,6 +115,7 @@
 
       updateOptions: function () {
         var self = this;
+        self.$image.css({width: '', left: 0, top: 0});
         self.$frame.width(self.options.width).height(self.options.height);
         self.$frame.off('.' + pluginName);
         self.$frame.removeClass('hover');
