@@ -28,6 +28,8 @@
     function Crop($image, options) {
       this.width = null;
       this.height = null;
+      this.img_width = null;
+      this.img_height = null;
       this.minPercent = null;
       this.options = options;
       this.$image = $image;
@@ -170,24 +172,23 @@
       zoom: function(percent) {
         var old_left = parseInt(this.$image.css('left'), 10),
           old_top = parseInt(this.$image.css('top'), 10),
-          old_percent = this.percent,
-          img_width, img_height;
+          old_percent = this.percent;
 
         this.percent = Math.max(this.minPercent, Math.min(1, percent));
-        img_width = Math.ceil(this.width*this.percent);
-        img_height = Math.ceil(this.height*this.percent);
-        this.$image.width(img_width);
+        this.img_width = Math.ceil(this.width * this.percent);
+        this.img_height = Math.ceil(this.height * this.percent);
+        this.$image.width(this.img_width);
 
         if (old_percent) {
           var zoomFactor = this.percent / old_percent;
           this.$image.css({
-            left: fill((1-zoomFactor)*this.options.width/2 + zoomFactor*old_left, img_width, this.options.width),
-            top: fill((1-zoomFactor)*this.options.height/2 + zoomFactor*old_top, img_height, this.options.height)
+            left: fill((1 - zoomFactor) * this.options.width / 2 + zoomFactor * old_left, this.img_width, this.options.width),
+            top: fill((1 - zoomFactor) * this.options.height / 2 + zoomFactor * old_top, this.img_height, this.options.height)
           });
         } else {
           this.$image.css({
-            left: fill((this.options.width-img_width)/2, img_width, this.options.width),
-            right: fill((this.options.height-img_height)/2, img_height, this.options.height)
+            left: fill((this.options.width - this.img_width) / 2, this.img_width, this.options.width),
+            right: fill((this.options.height - this.img_height) / 2, this.img_height, this.options.height)
           });
         }
         this.update();
@@ -200,8 +201,8 @@
       },
       drag: function(data, skipupdate) {
         this.$image.css({
-          left: fill(data.startX + data.dx, this.$image.width(), this.options.width),
-          top: fill(data.startY + data.dy, this.$image.height(), this.options.height)
+          left: fill(data.startX + data.dx, this.img_width, this.options.width),
+          top: fill(data.startY + data.dy, this.img_height, this.options.height)
         });
         if (skipupdate)
           this.update();
@@ -219,11 +220,9 @@
       },
       getDataURL: function () {
         var canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
-
         canvas.width = this.options.width;
         canvas.height = this.options.height;
         ctx.drawImage(this.$image.get(0), this.result.cropX, this.result.cropY, this.result.cropW, this.result.cropH, 0, 0, this.options.width, this.options.height);
-
         return canvas.toDataURL();
       },
       getBlob: function () {
