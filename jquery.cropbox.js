@@ -136,7 +136,7 @@
           self.$image.fadeIn('fast');
           self.fit();
           self.update();
-          img.src = null;
+          img.src = '';
           img.onload = null;
         };
       },
