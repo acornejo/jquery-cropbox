@@ -57,9 +57,8 @@
           else
             hammerit = Hammer(this.$image.get(0));
 
-          hammerit.on('mousedown', function(e) {
-            e.preventDefault(); // this prevents firefox's default image dragging
-            e.stopPropagation();
+          hammerit.on('touch', function(e) {
+            e.gesture.preventDefault();
           }).on("dragleft dragright dragup dragdown", function(e) {
             if (!dragData)
               dragData = {
