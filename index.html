@@ -32,7 +32,7 @@
             h       = $('.cropH', results),
             download = results.next('.download').find('a');
 
-          image.cropbox( {width: cropwidth, height: cropheight, showControls: 'auto', maxZoom: 2} )
+          image.cropbox( {width: cropwidth, height: cropheight, showControls: 'auto' } )
             .on('cropbox', function( event, results, img ) {
               x.text( results.cropX );
               y.text( results.cropY );
