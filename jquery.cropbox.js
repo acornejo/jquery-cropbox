@@ -30,6 +30,8 @@
       this.height = null;
       this.img_width = null;
       this.img_height = null;
+      this.img_left = 0;
+      this.img_top = 0;
       this.minPercent = null;
       this.options = options;
       this.$image = $image;
@@ -62,8 +64,8 @@
           }).on("dragleft dragright dragup dragdown", function(e) {
             if (!dragData)
               dragData = {
-                startX: parseInt(self.$image.css('left'), 10),
-                startY: parseInt(self.$image.css('top'), 10)
+                startX: self.img_top,
+                startY: self.img_left,
               };
             dragData.dx = e.gesture.deltaX;
             dragData.dy = e.gesture.deltaY;
@@ -87,8 +89,8 @@
         } else {
           this.$image.on('mousedown.' + pluginName, function(e1) {
             var dragData = {
-              startX: parseInt(self.$image.css('left'), 10),
-              startY: parseInt(self.$image.css('top'), 10)
+              startX: self.img_top,
+              startY: self.img_left,
             };
             e1.preventDefault();
             $(document).on('mousemove.' + pluginName, function (e2) {
@@ -97,7 +99,7 @@
               self.drag.call(self, dragData, true);
             }).on('mouseup.' + pluginName, function() {
               self.update.call(self);
-              $(document).off('.' + pluginName);
+              $(document).off('mousemove.' + pluginName);
             });
           });
         }
@@ -114,7 +116,9 @@
 
       updateOptions: function () {
         var self = this;
-        self.$image.css({width: '', left: 0, top: 0});
+        self.img_top = 0;
+        self.img_left = 0;
+        self.$image.css({width: '', left: self.img_left, top: self.img_top});
         self.$frame.width(self.options.width).height(self.options.height);
         self.$frame.off('.' + pluginName);
         self.$frame.removeClass('hover');
@@ -168,27 +172,22 @@
       },
 
       zoom: function(percent) {
-        var old_left = parseInt(this.$image.css('left'), 10),
-          old_top = parseInt(this.$image.css('top'), 10),
-          old_percent = this.percent;
+        var old_percent = this.percent;
 
         this.percent = Math.max(this.minPercent, Math.min(1, percent));
         this.img_width = Math.ceil(this.width * this.percent);
         this.img_height = Math.ceil(this.height * this.percent);
-        this.$image.width(this.img_width);
 
         if (old_percent) {
           var zoomFactor = this.percent / old_percent;
-          this.$image.css({
-            left: fill((1 - zoomFactor) * this.options.width / 2 + zoomFactor * old_left, this.img_width, this.options.width),
-            top: fill((1 - zoomFactor) * this.options.height / 2 + zoomFactor * old_top, this.img_height, this.options.height)
-          });
+          img_left = fill((1 - zoomFactor) * this.options.width / 2 + zoomFactor * this.img_left, this.img_width, this.options.width);
+          imt_top = fill((1 - zoomFactor) * this.options.height / 2 + zoomFactor * this.img_top, this.img_height, this.options.height);
         } else {
-          this.$image.css({
-            left: fill((this.options.width - this.img_width) / 2, this.img_width, this.options.width),
-            right: fill((this.options.height - this.img_height) / 2, this.img_height, this.options.height)
-          });
+          img_left = fill((this.options.width - this.img_width) / 2, this.img_width, this.options.width);
+          img_right = fill((this.options.height - this.img_height) / 2, this.img_height, this.options.height);
         }
+
+        this.$image.css({ width: this.img_width, left: this.img_left, top: this.img_top });
         this.update();
       },
       zoomIn: function() {
@@ -198,17 +197,16 @@
         this.zoom(this.percent - (1 - this.minPercent) / (this.options.zoom - 1 || 1));
       },
       drag: function(data, skipupdate) {
-        this.$image.css({
-          left: fill(data.startX + data.dx, this.img_width, this.options.width),
-          top: fill(data.startY + data.dy, this.img_height, this.options.height)
-        });
+        this.img_left = fill(data.startX + data.dx, this.img_height, this.options.height);
+        this.img_top = fill(data.startY + data.dy, this.img_width, this.options.width);
+        this.$image.css({ left: this.img_left, top: this.img_top });
         if (skipupdate)
           this.update();
       },
       update: function() {
         this.result = {
-          cropX: -Math.ceil(parseInt(this.$image.css('left'), 10) / this.percent),
-          cropY: -Math.ceil(parseInt(this.$image.css('top'), 10) / this.percent),
+          cropX: -Math.ceil(this.img_left / this.percent),
+          cropY: -Math.ceil(this.img_top / this.percent),
           cropW: Math.floor(this.options.width / this.percent),
           cropH: Math.floor(this.options.height / this.percent),
           stretch: this.minPercent > 1
@@ -245,6 +243,7 @@
       width: 200,
       height: 200,
       zoom: 10,
+      maxZoom: 1,
       controls: null,
       showControls: 'auto'
     };
