@@ -64,6 +64,13 @@ api.
 		<td>Number of incremental zoom steps. With the default of 10, you have to click the zoom-in button 9 times to reach 100%.</td>
 	</tr>
 	<tr>
+		<td>maxZoom</td>
+		<td>number</td>
+		<td>1.0</td>
+		<td>no</td>
+		<td>Maximum zoom value. With the default of 1.0 users can't zoom beyond the maximum image resolution.</td>
+	</tr>
+	<tr>
 		<td>controls</td>
 		<td>string/jquery</td>
 		<td>null</td>
