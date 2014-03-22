@@ -64,8 +64,8 @@
           }).on("dragleft dragright dragup dragdown", function(e) {
             if (!dragData)
               dragData = {
-                startX: self.img_top,
-                startY: self.img_left,
+                startX: self.img_left,
+                startY: self.img_top,
               };
             dragData.dx = e.gesture.deltaX;
             dragData.dy = e.gesture.deltaY;
@@ -89,8 +89,8 @@
         } else {
           this.$image.on('mousedown.' + pluginName, function(e1) {
             var dragData = {
-              startX: self.img_top,
-              startY: self.img_left,
+              startX: self.img_left,
+              startY: self.img_top,
             };
             e1.preventDefault();
             $(document).on('mousemove.' + pluginName, function (e2) {
@@ -174,17 +174,17 @@
       zoom: function(percent) {
         var old_percent = this.percent;
 
-        this.percent = Math.max(this.minPercent, Math.min(1, percent));
+        this.percent = Math.max(this.minPercent, Math.min(this.options.maxZoom, percent));
         this.img_width = Math.ceil(this.width * this.percent);
         this.img_height = Math.ceil(this.height * this.percent);
 
         if (old_percent) {
           var zoomFactor = this.percent / old_percent;
-          img_left = fill((1 - zoomFactor) * this.options.width / 2 + zoomFactor * this.img_left, this.img_width, this.options.width);
-          imt_top = fill((1 - zoomFactor) * this.options.height / 2 + zoomFactor * this.img_top, this.img_height, this.options.height);
+          this.img_left = fill((1 - zoomFactor) * this.options.width / 2 + zoomFactor * this.img_left, this.img_width, this.options.width);
+          this.img_top = fill((1 - zoomFactor) * this.options.height / 2 + zoomFactor * this.img_top, this.img_height, this.options.height);
         } else {
-          img_left = fill((this.options.width - this.img_width) / 2, this.img_width, this.options.width);
-          img_right = fill((this.options.height - this.img_height) / 2, this.img_height, this.options.height);
+          this.img_left = fill((this.options.width - this.img_width) / 2, this.img_width,  this.options.width);
+          this.img_top = fill((this.options.height - this.img_height) / 2, this.img_height, this.options.height);
         }
 
         this.$image.css({ width: this.img_width, left: this.img_left, top: this.img_top });
@@ -197,8 +197,8 @@
         this.zoom(this.percent - (1 - this.minPercent) / (this.options.zoom - 1 || 1));
       },
       drag: function(data, skipupdate) {
-        this.img_left = fill(data.startX + data.dx, this.img_height, this.options.height);
-        this.img_top = fill(data.startY + data.dy, this.img_width, this.options.width);
+        this.img_left = fill(data.startX + data.dx, this.img_width, this.options.width);
+        this.img_top = fill(data.startY + data.dy, this.img_height, this.options.height);
         this.$image.css({ left: this.img_left, top: this.img_top });
         if (skipupdate)
           this.update();
