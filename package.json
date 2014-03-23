@@ -1,6 +1,6 @@
 {
   "name": "jquery-cropbox",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": "Alex Cornejo",
   "main": "jquery.cropbox.js",
   "devDependencies": {
