@@ -135,12 +135,15 @@
         img.onload = function () {
           self.width = img.width;
           self.height = img.height;
-          self.percent = undefined;
-          self.$image.fadeIn('fast');
-          self.fit();
-          self.update();
           img.src = '';
           img.onload = null;
+          self.percent = undefined;
+          self.fit.call(self);
+          if (self.options.result)
+            self.setCrop.call(self, self.options.result);
+          else
+            self.zoom.call(self, self.minPercent);
+          self.$image.fadeIn('fast');
         };
       },
 
@@ -168,7 +171,16 @@
         var widthRatio = this.options.width / this.width,
           heightRatio = this.options.height / this.height;
         this.minPercent = (widthRatio >= heightRatio) ? widthRatio : heightRatio;
-        this.zoom(this.minPercent);
+      },
+
+      setCrop: function (result) {
+        this.percent = Math.max(this.options.width/result.cropW, this.options.height/result.cropH);
+        this.img_width = Math.ceil(this.width*this.percent);
+        this.img_height = Math.ceil(this.height*this.percent);
+        this.img_left = -Math.floor(result.cropX*this.percent);
+        this.img_top = -Math.floor(result.cropY*this.percent);
+        this.$image.css({ width: this.img_width, left: this.img_left, top: this.img_top });
+        this.update();
       },
 
       zoom: function(percent) {

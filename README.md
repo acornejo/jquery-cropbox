@@ -75,8 +75,15 @@ api.
 		<td>string/jquery</td>
 		<td>null</td>
 		<td>no</td>
-		<td>If not null, this is the entire html block that should appear on hover over the image for instructions and/or buttons (could include the zoom in/out buttons for example). If null, the default html block is used which has the text "Click to drag" and the zoom in/out buttons. Use '' (or false) if you don't want anything to appear.</td>
+		<td>If not null, this is the entire html block that should appear on hover over the image for instructions and/or buttons (could include the zoom in/out buttons for example). If null, the default html block is used which has the text "Click to drag" and the zoom in/out buttons. Use false to disable controls.</td>
 	</tr>
+    <tr>
+        <td>result</td>
+        <td>{cropX:number, cropY:number, cropW:number, cropH:number}</td>
+        <td>null</td>
+        <td>no</td>
+        <td>Set the initial cropping area</td>
+    </tr>
 	<tr>
 		<td>showControls</td>
 		<td>never, always, hover, auto</td>
@@ -115,6 +122,11 @@ api.
 		<td>{startX: integer, startY: integer, dx: integer, dy: integer}</td>
 		<td>Simulate image dragging, starting from (startX,startY) and moving a delta of (dx,dy). Need to call update to reflect the changes.</td>
 	</tr>
+    <tr>
+        <td>setCrop</td>
+        <td>{cropX: number, cropY: number, cropW: number, cropH: number}</td>
+        <td>Set crop window.</td>
+    </tr>
 	<tr>
 		<td>update</td>
 		<td>(none)</td>
