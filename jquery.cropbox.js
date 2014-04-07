@@ -99,6 +99,7 @@
               self.drag.call(self, dragData, true);
             }).on('mouseup.' + pluginName, function() {
               self.update.call(self);
+              $(document).off('mouseup.' + pluginName);
               $(document).off('mousemove.' + pluginName);
             });
           });
