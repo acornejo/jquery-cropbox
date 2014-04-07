@@ -160,7 +160,7 @@
         this.$image.off('.' + pluginName);
         this.$image.css({width: '', left: '', top: ''});
         this.$image.removeClass('cropImage');
-        this.$image.removeData('cropbox');
+        this.$image.removeData(pluginName);
         this.$image.insertAfter(this.$frame);
         this.$frame.removeClass('cropFrame');
         this.$frame.removeAttr('style');
@@ -241,10 +241,10 @@
 
     $.fn[pluginName] = function(options) {
       return this.each(function() {
-        var inst = $.data(this, pluginName);
+        var $this = $(this), inst = $this.data(pluginName);
         if (!inst) {
           var opts = $.extend({}, $.fn[pluginName].defaultOptions, options);
-          $.data(this, pluginName, new Crop($(this), opts));
+          $this.data(pluginName, new Crop($this, opts));
         } else if (options) {
           $.extend(inst.options, options);
           inst.updateOptions();
