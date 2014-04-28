@@ -45,7 +45,7 @@
         var self = this;
 
         var defaultControls = $('<div/>', { 'class' : 'cropControls' })
-              .append($('<span>Drag to crop</span>'))
+              .append($('<span>'+this.options.label+'</span>'))
               .append($('<a/>', { 'class' : 'cropZoomIn' }).on('click', $.proxy(this.zoomIn, this)))
               .append($('<a/>', { 'class' : 'cropZoomOut' }).on('click', $.proxy(this.zoomOut, this)));
 
@@ -258,7 +258,8 @@
       zoom: 10,
       maxZoom: 1,
       controls: null,
-      showControls: 'auto'
+      showControls: 'auto',
+      label: 'Drag to crop'
     };
   }
 
