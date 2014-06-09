@@ -168,16 +168,16 @@ A reference to the cropbox object can be accessed like so:
 
 You then have access to all the properties and methods used for that specific element.
 
-## Known Bugs
+## Bug Reporting
 
-Report any problems or questions regarding jquery-cropbox in the
-[issues](https://github.com/acornejo/jquery-cropbox/issues) section.
+Use the [issues](https://github.com/acornejo/jquery-cropbox/issues)
+section to report any problems or questions regarding jquery-cropbox.
 
 Please understand that I develop this plugin in my spare time, which is
 limited. To make the best use of my time, I ask that you submit
-detailed bug reports and include a [jsfiddle](http://jsfiddle.net) that
+a detailed bug report and include a [jsfiddle](http://jsfiddle.net) that
 exhibits the problem, otherwise I won't be able to offer much help.
 
-A sample jsfiddle is provided [here](http://jsfiddle.net/Ak6d5/), please
+A sample jsfiddle is provided [here](http://jsfiddle.net/Ak6d5/),
 fork it and create a minimal example that recreates the problem you
 are having and provide a link to it in the issue.
