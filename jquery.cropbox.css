@@ -52,13 +52,14 @@
 	display         : block;
 	float           : right;
 	margin          : 4px 4px 0 0;
+	padding         : 0;
 	background      : #fff;
     border: 1px solid #000;
 	color           : #000;
 	border-radius   : 4px;
 	width           : 18px;
 	height          : 18px;
-	line-height     : 18px;
+	line-height     : 16px;
 	font-size       : 18px;
 	text-align      : center;
 	text-decoration : none;
