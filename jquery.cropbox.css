@@ -72,10 +72,27 @@
 .cropZoomIn .after {
 	content : "+";
 	display : block;
+	text-align:center;
 }
 
 .cropZoomOut::after,
 .cropZoomOut .after {
 	content        : "-";
 	display        : block;
+	text-align:center;
+}
+
+/*IE8*/
+.cropZoomIn:after,
+.cropZoomIn .after {
+	content : "+";
+	display : block;
+	text-align:center;
+}
+/*IE8*/
+.cropZoomOut:after,
+.cropZoomOut .after {
+	content        : "-";
+	display        : block;
+	text-align:center;
 }

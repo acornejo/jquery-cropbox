@@ -1,4 +1,7 @@
 (function() {
+  var supportsCanvas = document.createElement('canvas');
+  supportsCanvas = !!(supportsCanvas.getContext && supportsCanvas.getContext('2d'));
+
   // helper functions
   function is_touch_device() {
     return 'ontouchstart' in window || // works on most browsers
@@ -87,6 +90,8 @@
             self.zoomIn.call(self);
           });
         } else {
+          // prevent IE8's default drag functionality
+          this.$image.on("dragstart", function () { return false; });
           this.$image.on('mousedown.' + pluginName, function(e1) {
             var dragData = {
               startX: self.img_left,
@@ -132,7 +137,6 @@
 
         // Image hack to get width and height on IE
         var img = new Image();
-        img.src = self.$image.attr('src');
         img.onload = function () {
           self.width = img.width;
           self.height = img.height;
@@ -146,6 +150,9 @@
             self.zoom.call(self, self.minPercent);
           self.$image.fadeIn('fast');
         };
+        // onload has to be set before src for IE8
+        // otherwise it never fires
+        img.src = self.$image.attr('src');
       },
 
       remove: function () {
@@ -228,6 +235,11 @@
         this.$image.trigger(pluginName, [this.result, this]);
       },
       getDataURL: function () {
+        if(!supportsCanvas) {
+          // return an empty string for browsers that don't support canvas.
+          // this allows it to fail gracefully.
+          return false;
+        }
         var canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
         canvas.width = this.options.width;
         canvas.height = this.options.height;
