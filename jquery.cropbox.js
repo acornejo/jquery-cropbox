@@ -49,8 +49,8 @@
 
         var defaultControls = $('<div/>', { 'class' : 'cropControls' })
               .append($('<span>'+this.options.label+'</span>'))
-              .append($('<button/>', { 'class' : 'cropZoomIn' }).on('click', $.proxy(this.zoomIn, this)))
-              .append($('<button/>', { 'class' : 'cropZoomOut' }).on('click', $.proxy(this.zoomOut, this)));
+              .append($('<button/>', { 'class' : 'cropZoomIn', 'type':'button' }).on('click', $.proxy(this.zoomIn, this)))
+              .append($('<button/>', { 'class' : 'cropZoomOut', 'type':'button' }).on('click', $.proxy(this.zoomOut, this)));
 
         this.$frame.append(this.options.controls || defaultControls);
         this.updateOptions();
