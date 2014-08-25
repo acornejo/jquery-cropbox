@@ -50,7 +50,18 @@
               .append($('<button/>', { 'class' : 'cropZoomOut' }).on('click', $.proxy(this.zoomOut, this)));
 
         this.$frame.append(this.options.controls || defaultControls);
+        
+        if (this.options.showSaveControls == true) {
+            var saveControlsTop = $('<div/>', { 'class' : 'cropControls top' })
+                .append($('<span class="cancel-control">Cancel</span>').on('click', $.proxy(this.doCancel, this)))
+                .append($('<span class="save-control">Save</span>').on('click', $.proxy(this.doSave, this)))
+                
+            this.$frame.append(saveControlsTop);
+        }
+        
         this.updateOptions();
+        
+        this.$image.css('cursor','move');
 
         if (typeof $.fn.hammer === 'function' || typeof Hammer !== 'undefined') {
           var hammerit, dragData;
@@ -236,6 +247,23 @@
       },
       getBlob: function () {
         return uri2blob(this.getDataURL());
+      },
+      doCancel: function() {
+        if (typeof this.options.cancel === 'function') {
+          this.options.cancel(this)
+        }
+      },
+      doSave: function() {
+        if (typeof this.options.save === 'function') {
+          this.options.save(this)
+        }
+      },
+      position : function(x,y){
+        this.$image.css({
+          left: x,
+          top: y
+        });
+        this.update()
       },
     };
 

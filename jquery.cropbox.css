@@ -68,10 +68,24 @@
 	zoom            : expression(this.runtimeStyle.zoom = "1", this.appendChild( document.createElement("b") ).className = "after")\9;
 }
 
+.cropControls.top {
+    bottom : inherit;
+}
+
+.cropControls span.cancel-control  {
+    cursor : pointer;
+}
+
+.cropControls span.save-control {
+    float        : right;
+    margin-right : 5px;
+    cursor       : pointer;
+}
+
 .cropZoomIn::after,
 .cropZoomIn .after {
-	content : "+";
-	display : block;
+    content : "+";
+    display : block;
 }
 
 .cropZoomOut::after,
