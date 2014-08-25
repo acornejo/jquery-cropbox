@@ -44,13 +44,21 @@
       init: function () {
         var self = this;
 
-        var defaultControls = $('<div/>', { 'class' : 'cropControls' })
-              .append($('<span>'+this.options.label+'</span>'))
-              .append($('<button/>', { 'class' : 'cropZoomIn' }).on('click', $.proxy(this.zoomIn, this)))
-              .append($('<button/>', { 'class' : 'cropZoomOut' }).on('click', $.proxy(this.zoomOut, this)));
+        if (this.options.disableControls != true) {
+          var defaultControls = $('<div/>', { 'class' : 'cropControls' })
+                .append($('<span>'+this.options.label+'</span>'))
+                .append($('<button/>', { 'class' : 'cropZoomIn' }).on('click', $.proxy(this.zoomIn, this)))
+                .append($('<button/>', { 'class' : 'cropZoomOut' }).on('click', $.proxy(this.zoomOut, this)));
 
-        this.$frame.append(this.options.controls || defaultControls);
+          this.$frame.append(this.options.controls || defaultControls);
+        }
+        
         this.updateOptions();
+        
+        if (this.options.disableControls == true) {
+          this.$image.css('cursor','default');
+          return;
+        }
 
         if (typeof $.fn.hammer === 'function' || typeof Hammer !== 'undefined') {
           var hammerit, dragData;
@@ -144,7 +152,12 @@
             self.setCrop.call(self, self.options.result);
           else
             self.zoom.call(self, self.minPercent);
-          self.$image.fadeIn('fast');
+          if (!self.options.disableControls){
+            self.$image.fadeIn('fast');
+          }
+          else {
+            self.$image.show();
+          }
         };
       },
 
