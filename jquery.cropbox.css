@@ -64,18 +64,33 @@
 	text-align      : center;
 	text-decoration : none;
 	cursor          : pointer;
-	/* IE SUCKS */
-	zoom            : expression(this.runtimeStyle.zoom = "1", this.appendChild( document.createElement("b") ).className = "after")\9;
 }
 
 .cropZoomIn::after,
 .cropZoomIn .after {
 	content : "+";
 	display : block;
+	text-align:center;
 }
 
 .cropZoomOut::after,
 .cropZoomOut .after {
 	content        : "-";
 	display        : block;
+	text-align:center;
+}
+
+/*IE8*/
+.cropZoomIn:after,
+.cropZoomIn .after {
+	content : "+";
+	display : block;
+	text-align:center;
+}
+/*IE8*/
+.cropZoomOut:after,
+.cropZoomOut .after {
+	content        : "-";
+	display        : block;
+	text-align:center;
 }
