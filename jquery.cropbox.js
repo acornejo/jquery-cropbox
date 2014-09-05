@@ -28,7 +28,7 @@
   var pluginName = 'cropbox';
 
   function factory($) {
-    function Crop($image, options) {
+    function Crop($image, options, on_load) {
       this.width = null;
       this.height = null;
       this.img_width = null;
@@ -40,6 +40,7 @@
       this.$image = $image;
       this.$image.hide().prop('draggable', false).addClass('cropImage').wrap('<div class="cropFrame" />'); // wrap image in frame;
       this.$frame = this.$image.parent();
+	  this.on_load = on_load || function() {};
       this.init();
     }
 
@@ -149,6 +150,7 @@
           else
             self.zoom.call(self, self.minPercent);
           self.$image.fadeIn('fast');
+		  self.on_load.call(self);
         };
         // onload has to be set before src for IE8
         // otherwise it never fires
@@ -251,12 +253,12 @@
       },
     };
 
-    $.fn[pluginName] = function(options) {
+    $.fn[pluginName] = function(options, on_load) {
       return this.each(function() {
         var $this = $(this), inst = $this.data(pluginName);
         if (!inst) {
           var opts = $.extend({}, $.fn[pluginName].defaultOptions, options);
-          $this.data(pluginName, new Crop($this, opts));
+          $this.data(pluginName, new Crop($this, opts, on_load));
         } else if (options) {
           $.extend(inst.options, options);
           inst.updateOptions();
