@@ -44,6 +44,7 @@
     }
 
     Crop.prototype = {
+      constructor: Crop,
       init: function () {
         var self = this;
 
@@ -273,6 +274,8 @@
       showControls: 'auto',
       label: 'Drag to crop'
     };
+    
+    $.fn[pluginName].Constructor = Crop;
   }
 
   if (typeof require === "function" && typeof exports === "object" && typeof module === "object")
