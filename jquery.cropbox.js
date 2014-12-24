@@ -53,6 +53,17 @@
               .append($('<button/>', { 'class' : 'cropZoomOut', 'type':'button' }).on('click', $.proxy(this.zoomOut, this)));
 
         this.$frame.append(this.options.controls || defaultControls);
+
+        if (this.options.showUploadControls) {
+          var showUploadControls = $('<div/>', { 'class' : 'cropControls top' }).append($('<label/>'));
+
+          showUploadControls.find('label')
+            .append($('<span>Upload file</span>'))
+            .append($('<input type="file"/>').on('change', { parent: this }, this.uploadImage));
+
+          this.$frame.append(showUploadControls);
+        }
+
         this.updateOptions();
 
         if (typeof $.fn.hammer === 'function' || typeof Hammer !== 'undefined') {
@@ -215,6 +226,16 @@
       },
       zoomOut: function() {
         this.zoom(this.percent - (1 - this.minPercent) / (this.options.zoom - 1 || 1));
+      },
+      uploadImage: function(e) {
+        var oFReader = new FileReader(),
+          that = e.data.parent;
+        oFReader.readAsDataURL(this.files[0]);
+
+        oFReader.onload = function (oFREvent) {
+          that.$image.attr('src', oFREvent.target.result);
+          that.init();
+        };
       },
       drag: function(data, skipupdate) {
         this.img_left = fill(data.startX + data.dx, this.img_width, this.options.width);
