@@ -22,6 +22,8 @@ This plugin started as a fork of
 support, mousewheel support and client resize support through the canvas
 api.
 
+**Install with Bower:** `bower install cropbox`
+
 ## Usage
 
 ```javascript
