@@ -120,6 +120,10 @@
         }
       },
 
+      onLoad : function() {
+        if (this.options.onload) this.options.onload(this)
+      },
+
       updateOptions: function () {
         var self = this;
         self.img_top = 0;
@@ -149,6 +153,7 @@
           else
             self.zoom.call(self, self.minPercent);
           self.$image.fadeIn('fast');
+          self.onLoad();
         };
         // onload has to be set before src for IE8
         // otherwise it never fires
