@@ -30,6 +30,9 @@ api.
 	$('yourimage').cropbox({
 	    width: 200,
 		height: 200
+	}, function() {
+		//on load
+		console.log('Url: ' + this.getDataURL());
 	}).on('cropbox', function(e, data) {
         console.log('crop window: ' + data);
 	});
@@ -166,6 +169,12 @@ A reference to the cropbox object can be accessed like so:
 ```javascript
 	var crop = $('yourimage').data('cropbox');
 	console.log(crop.result);
+```
+or inside the onload function:
+```javascript
+	var crop = $('yourimage').cropbox({}, function() {
+		console.log(this.result);
+	});
 ```
 
 You then have access to all the properties and methods used for that specific element.
