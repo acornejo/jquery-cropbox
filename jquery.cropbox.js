@@ -222,7 +222,7 @@
         this.img_left = fill(data.startX + data.dx, this.img_width, this.options.width);
         this.img_top = fill(data.startY + data.dy, this.img_height, this.options.height);
         this.$image.css({ left: this.img_left, top: this.img_top });
-        if (skipupdate)
+        if (!skipupdate)
           this.update();
       },
       update: function() {
