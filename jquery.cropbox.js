@@ -59,35 +59,35 @@
         if (typeof $.fn.hammer === 'function' || typeof Hammer !== 'undefined') {
           var hammerit, dragData;
           if (typeof $.fn.hammer === 'function')
-            hammerit = this.$image.hammer();
+            hammerit = this.$image.hammer().data('hammer'); // Get the hammer instance after it has been created.
           else
             hammerit = Hammer(this.$image.get(0));
-
-          hammerit.on('touch', function(e) {
-            e.gesture.preventDefault();
-          }).on("dragleft dragright dragup dragdown", function(e) {
+		  // Enable panning in all directions without any threshold.
+		  hammerit.get('pan').set({ direction: Hammer.DIRECTION_ALL, threshold: 0 });
+		  // Enable pinching.
+		  hammerit.get('pinch').set({ enable: true });
+          hammerit.on('panleft panright panup pandown', function(e) {
             if (!dragData)
               dragData = {
                 startX: self.img_left,
-                startY: self.img_top,
+                startY: self.img_top	// Some IE versions complained about the extra comma.
               };
-            dragData.dx = e.gesture.deltaX;
-            dragData.dy = e.gesture.deltaY;
-            e.gesture.preventDefault();
-            e.gesture.stopPropagation();
+            dragData.dx = e.deltaX;
+            dragData.dy = e.deltaY;
+            e.preventDefault();
             self.drag.call(self, dragData, true);
-          }).on('release', function(e) {
-            e.gesture.preventDefault();
+          }).on('panend pancancel', function(e) {
+            e.preventDefault();
             dragData = null;
             self.update.call(self);
           }).on('doubletap', function(e) {
-            e.gesture.preventDefault();
+            e.preventDefault();
             self.zoomIn.call(self);
           }).on('pinchin', function (e) {
-            e.gesture.preventDefault();
+            e.preventDefault();
             self.zoomOut.call(self);
           }).on('pinchout', function (e) {
-            e.gesture.preventDefault();
+            e.preventDefault();
             self.zoomIn.call(self);
           });
         } else {
@@ -96,7 +96,7 @@
           this.$image.on('mousedown.' + pluginName, function(e1) {
             var dragData = {
               startX: self.img_left,
-              startY: self.img_top,
+              startY: self.img_top
             };
             e1.preventDefault();
             $(document).on('mousemove.' + pluginName, function (e2) {
@@ -160,11 +160,11 @@
       remove: function () {
         var hammerit;
         if (typeof $.fn.hammer === 'function')
-          hammerit = this.$image.hammer();
+          hammerit = this.$image.data('hammer');	// Get hammer instance object.
         else if (typeof Hammer !== 'undefined')
           hammerit = Hammer(this.$image.get(0));
         if (hammerit)
-          hammerit.off('mousedown dragleft dragright dragup dragdown release doubletap pinchin pinchout');
+          hammerit.off('panleft panright panup pandown panend pancancel doubletap pinchin pinchout');
         this.$frame.off('.' + pluginName);
         this.$image.off('.' + pluginName);
         this.$image.css({width: '', left: '', top: ''});
@@ -174,7 +174,7 @@
         this.$frame.removeClass('cropFrame');
         this.$frame.removeAttr('style');
         this.$frame.empty();
-        this.$frame.hide();
+        this.$frame.remove();
       },
 
       fit: function () {
@@ -250,7 +250,7 @@
       },
       getBlob: function () {
         return uri2blob(this.getDataURL());
-      },
+      }
     };
 
     $.fn[pluginName] = function(options, on_load) {
