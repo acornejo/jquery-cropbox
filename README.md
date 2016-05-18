@@ -148,6 +148,11 @@ api.
 		<td>Generate a Blob with the cropped image (requires HTML5 compliant browser).</td>
 	</tr>
 	<tr>
+		<td>pause</td>
+		<td>(none)/boolean</td>
+		<td>Pauses the events but keeps the cropbox alive. Can force the state of the pause with a boolean parameter.</td>
+	</tr>
+	<tr>
 		<td>remove</td>
 		<td>(none)</td>
 		<td>Remove the cropbox functionality from the image.</td>
