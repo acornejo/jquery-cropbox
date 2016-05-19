@@ -213,10 +213,10 @@
         this.update();
       },
       zoomIn: function() {
-        this.zoom(this.percent + (1 - this.minPercent) / (this.options.zoom - 1 || 1));
+        this.zoom(this.percent + Math.abs(this.minPercent - 1) / (this.options.zoom - 1 || 1));
       },
       zoomOut: function() {
-        this.zoom(this.percent - (1 - this.minPercent) / (this.options.zoom - 1 || 1));
+        this.zoom(this.percent - Math.abs(this.minPercent - 1) / (this.options.zoom - 1 || 1));
       },
       drag: function(data, skipupdate) {
         this.img_left = fill(data.startX + data.dx, this.img_width, this.options.width);
