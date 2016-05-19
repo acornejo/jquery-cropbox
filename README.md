@@ -96,6 +96,13 @@ api.
 		<td>no</td>
 		<td>This flag is used to determine when to display the controls. Never, always and hover do exactly what you would expect (never show them, always show them, show them on hover). The auto flag is the same as the hover flag, except that on mobile devices it always shows the controls (since there is no hover event).</td>
 	</tr>
+	<tr>
+        <td>paused</td>
+        <td>boolean</td>
+        <td>false</td>
+        <td>no</td>
+        <td>Should the plugin start paused ?</td>
+    </tr>
 </table>
 
 ## Methods
@@ -146,6 +153,11 @@ api.
 		<td>getBlob</td>
 		<td>(none)</td>
 		<td>Generate a Blob with the cropped image (requires HTML5 compliant browser).</td>
+	</tr>
+	<tr>
+		<td>pause</td>
+		<td>(none)/boolean</td>
+		<td>Pauses the events but keeps the cropbox alive. Can force the state of the pause with a boolean parameter.</td>
 	</tr>
 	<tr>
 		<td>remove</td>
