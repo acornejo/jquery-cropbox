@@ -57,16 +57,16 @@
         this.updateOptions();
 
         if (typeof $.fn.hammer === 'function' || typeof Hammer !== 'undefined') {
-          var hammerit, dragData;
+		  var dragData;
           if (typeof $.fn.hammer === 'function')
-            hammerit = this.$image.hammer().data('hammer'); // Get the hammer instance after it has been created.
+            this.hammerit = this.$image.hammer().data('hammer'); // Get the hammer instance after it has been created.
           else
-            hammerit = Hammer(this.$image.get(0));
+            this.hammerit = Hammer(this.$image.get(0));
 		  // Enable panning in all directions without any threshold.
-		  hammerit.get('pan').set({ direction: Hammer.DIRECTION_ALL, threshold: 0 });
+		  this.hammerit.get('pan').set({ direction: Hammer.DIRECTION_ALL, threshold: 0 });
 		  // Enable pinching.
-		  hammerit.get('pinch').set({ enable: true });
-          hammerit.on('panleft panright panup pandown', function(e) {
+		  this.hammerit.get('pinch').set({ enable: true });
+          this.hammerit.on('panleft panright panup pandown', function(e) {
             if (!dragData)
               dragData = {
                 startX: self.img_left,
@@ -158,13 +158,8 @@
       },
 
       remove: function () {
-        var hammerit;
-        if (typeof $.fn.hammer === 'function')
-          hammerit = this.$image.data('hammer');	// Get hammer instance object.
-        else if (typeof Hammer !== 'undefined')
-          hammerit = Hammer(this.$image.get(0));
-        if (hammerit)
-          hammerit.off('panleft panright panup pandown panend pancancel doubletap pinchin pinchout');
+        if (this.hammerit)
+          this.hammerit.off('panleft panright panup pandown panend pancancel doubletap pinchin pinchout');
         this.$frame.off('.' + pluginName);
         this.$image.off('.' + pluginName);
         this.$image.css({width: '', left: '', top: ''});
