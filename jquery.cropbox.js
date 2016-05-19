@@ -146,6 +146,7 @@
                         if (this.hammerit){
                             this.hammerit.get('pinch').set({enable: false});
                             this.hammerit.get('pan').set({enable: false});
+                            this._unbindMouseWheel();
                         }else{
                             this._unbindEvents();
                         }
@@ -156,6 +157,7 @@
                         if (this.hammerit){
                             this.hammerit.get('pinch').set({enable: true});
                             this.hammerit.get('pan').set({enable: true});
+                            this._bindMouseWheel();
                         }else{
                             this._bindEvents();
                         }
@@ -201,6 +203,10 @@
                             self.zoomOut.call(self);
                     });
                 }
+            },
+
+            _unbindMouseWheel: function(){
+                this.$image.off('mousewheel.' + pluginName);
             },
 
             _unbindEvents: function(){
