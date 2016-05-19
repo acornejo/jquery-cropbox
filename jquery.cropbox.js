@@ -56,10 +56,50 @@
                 this.$frame.append(this.options.controls || defaultControls);
                 this.updateOptions();
 
-                this.isPaused = false;
                 this.hammerit = false;
 
-                this._bindEvents();
+                if (typeof $.fn.hammer === 'function' || typeof Hammer !== 'undefined') {
+                    var dragData;
+                    if (typeof $.fn.hammer === 'function')
+                        this.hammerit = this.$image.hammer().data('hammer'); // Get the hammer instance after it has been created.
+                    else
+                        this.hammerit = Hammer(this.$image.get(0));
+                    // Enable panning in all directions without any threshold.
+                    this.hammerit.get('pan').set({ direction: Hammer.DIRECTION_ALL, threshold: 0 });
+                    // Enable pinching.
+                    this.hammerit.get('pinch').set({ enable: true });
+                    this.hammerit.on('panleft panright panup pandown', function(e) {
+                        if (!dragData)
+                            dragData = {
+                                startX: self.img_left,
+                                startY: self.img_top	// Some IE versions complained about the extra comma.
+                            };
+                        dragData.dx = e.deltaX;
+                        dragData.dy = e.deltaY;
+                        e.preventDefault();
+                        self.drag.call(self, dragData, true);
+                    }).on('panend pancancel', function(e) {
+                        e.preventDefault();
+                        dragData = null;
+                        self.update.call(self);
+                    }).on('doubletap', function(e) {
+                        e.preventDefault();
+                        self.zoomIn.call(self);
+                    }).on('pinchin', function (e) {
+                        e.preventDefault();
+                        self.zoomOut.call(self);
+                    }).on('pinchout', function (e) {
+                        e.preventDefault();
+                        self.zoomIn.call(self);
+                    });
+                    this._bindMouseWheel();
+                } else {
+                    this._bindEvents();
+                }
+
+                if(this.options.paused){
+                    this.pause(true);
+                }
             },
 
             updateOptions: function () {
@@ -103,13 +143,22 @@
 
                 if(pause){
                     if(!this.isPaused){
-                        this._unbindEvents();
+                        if (this.hammerit){
+                            this.hammerit.get('pinch').set({enable: false});
+                            this.hammerit.get('pan').set({enable: false});
+                        }else{
+                            this._unbindEvents();
+                        }
                     }
                     this.isPaused = true;
                 }else{
-					// Avoid rebiding the events if already binded in case we force the pause to false.
                     if(this.isPaused){
-                        this._bindEvents();
+                        if (this.hammerit){
+                            this.hammerit.get('pinch').set({enable: true});
+                            this.hammerit.get('pan').set({enable: true});
+                        }else{
+                            this._bindEvents();
+                        }
                     }
                     this.isPaused = false;
                 }
@@ -118,60 +167,31 @@
             _bindEvents: function(){
                 var self = this;
 
-                if (typeof $.fn.hammer === 'function' || typeof Hammer !== 'undefined') {
-                    var dragData;
-                    if (typeof $.fn.hammer === 'function')
-                        this.hammerit = this.$image.hammer().data('hammer'); // Get the hammer instance after it has been created.
-                    else
-                        this.hammerit = Hammer(this.$image.get(0));
-                    // Enable panning in all directions without any threshold.
-                    this.hammerit.get('pan').set({ direction: Hammer.DIRECTION_ALL, threshold: 0 });
-                    // Enable pinching.
-                    this.hammerit.get('pinch').set({ enable: true });
-                    this.hammerit.on('panleft panright panup pandown', function(e) {
-                        if (!dragData)
-                            dragData = {
-                                startX: self.img_left,
-                                startY: self.img_top	// Some IE versions complained about the extra comma.
-                            };
-                        dragData.dx = e.deltaX;
-                        dragData.dy = e.deltaY;
-                        e.preventDefault();
+                // prevent IE8's default drag functionality
+                this.$image.on("dragstart", function () { return false; });
+                this.$image.on('mousedown.' + pluginName, function(e1) {
+                    var dragData = {
+                        startX: self.img_left,
+                        startY: self.img_top
+                    };
+                    e1.preventDefault();
+                    $(document).on('mousemove.' + pluginName, function (e2) {
+                        dragData.dx = e2.pageX - e1.pageX;
+                        dragData.dy = e2.pageY - e1.pageY;
                         self.drag.call(self, dragData, true);
-                    }).on('panend pancancel', function(e) {
-                        e.preventDefault();
-                        dragData = null;
+                    }).on('mouseup.' + pluginName, function() {
                         self.update.call(self);
-                    }).on('doubletap', function(e) {
-                        e.preventDefault();
-                        self.zoomIn.call(self);
-                    }).on('pinchin', function (e) {
-                        e.preventDefault();
-                        self.zoomOut.call(self);
-                    }).on('pinchout', function (e) {
-                        e.preventDefault();
-                        self.zoomIn.call(self);
+                        $(document).off('mouseup.' + pluginName);
+                        $(document).off('mousemove.' + pluginName);
                     });
-                } else {
-                    // prevent IE8's default drag functionality
-                    this.$image.on("dragstart", function () { return false; });
-                    this.$image.on('mousedown.' + pluginName, function(e1) {
-                        var dragData = {
-                            startX: self.img_left,
-                            startY: self.img_top
-                        };
-                        e1.preventDefault();
-                        $(document).on('mousemove.' + pluginName, function (e2) {
-                            dragData.dx = e2.pageX - e1.pageX;
-                            dragData.dy = e2.pageY - e1.pageY;
-                            self.drag.call(self, dragData, true);
-                        }).on('mouseup.' + pluginName, function() {
-                            self.update.call(self);
-                            $(document).off('mouseup.' + pluginName);
-                            $(document).off('mousemove.' + pluginName);
-                        });
-                    });
-                }
+                });
+
+                this._bindMouseWheel();
+            },
+
+            _bindMouseWheel: function(){
+                var self = this;
+
                 if ($.fn.mousewheel) {
                     this.$image.on('mousewheel.' + pluginName, function (e) {
                         e.preventDefault();
@@ -184,14 +204,15 @@
             },
 
             _unbindEvents: function(){
-                if (this.hammerit)
-                    this.hammerit.off('panleft panright panup pandown panend pancancel doubletap pinchin pinchout');
                 this.$frame.off('.' + pluginName);
                 this.$image.off('.' + pluginName);
             },
 
             remove: function () {
                 this._unbindEvents();
+                if(this.hammerit){
+                    this.hammerit.destroy();
+                }
                 this.$image.css({width: '', left: '', top: ''});
                 this.$image.removeClass('cropImage');
                 this.$image.removeData(pluginName);
