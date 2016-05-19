@@ -57,7 +57,6 @@
         this.updateOptions();
 
         if (typeof $.fn.hammer === 'function' || typeof Hammer !== 'undefined') {
-          this.hammerit;
 		  var dragData;
           if (typeof $.fn.hammer === 'function')
             this.hammerit = this.$image.hammer().data('hammer'); // Get the hammer instance after it has been created.
