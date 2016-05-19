@@ -107,6 +107,7 @@
                     }
                     this.isPaused = true;
                 }else{
+					// Avoid rebiding the events if already binded in case we force the pause to false.
                     if(this.isPaused){
                         this._bindEvents();
                     }
